@@ -8,7 +8,8 @@ app.use(cors());
 
 const supabase = require("./supabase.js");
 
-const getFlightsFor = require("./services/getSouDes.js");
+const getCitiesFor = require("./services/getSouDes.js");
+const getFlightsFor = require("./services/getFlights.js");
 
 async function getFlightData() {
   try {
@@ -31,6 +32,7 @@ app.get("/jagannath", async (req, res) => {
   return res.send("Connected bro");
 });
 
+app.get("/getCities", getCitiesFor);
 app.get("/getFlights", getFlightsFor);
 
 // app.get("/flights", async (req, res) => {
