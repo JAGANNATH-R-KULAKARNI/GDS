@@ -26,6 +26,6 @@ module.exports = async (req, res) => {
 
   res.send({
     sources: cities,
-    distinations: flights,
+    destinations: flights,
   });
 };
