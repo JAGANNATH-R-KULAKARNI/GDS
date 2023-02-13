@@ -11,81 +11,53 @@ const cities = {
   Noida: 7,
 };
 
-// const flights = {
-//   1: [2],
-//   2: [1, 3, 4, 5, 6],
-//   3: [2, 4, 5, 6, 7],
-//   4: [2, 3, 5, 6],
-//   5: [2, 3, 4, 6],
-//   6: [2, 3, 4, 5, 7],
-//   7: [6, 3],
-// };
+async function getFlightData() {
+  const data = await supabase.from("flights").select("*");
 
-const flights = {
-  Indigo: {
-    routes: [
-      [1, 2],
-      [2, 3],
-      [2, 4],
-      [3, 3],
-      [3, 5],
-    ],
-    sPlane: 0,
-  },
-  "Air India": {
-    routes: [
-      [1, 2],
-      [2, 3],
-      [2, 4],
-      [3, 3],
-      [3, 5],
-    ],
-    sPlane: 1,
-  },
-  Vistara: {
-    routes: [
-      [1, 2],
-      [2, 3],
-      [2, 4],
-      [3, 3],
-      [3, 5],
-    ],
-    sPlane: 0,
-  },
-  "Air Asia": {
-    routes: [
-      [1, 2],
-      [2, 3],
-      [2, 4],
-      [3, 3],
-      [3, 5],
-    ],
-    sPlane: 0,
-  },
-};
+  if (data) {
+    //console.log(data.data);
+    return data.data;
+  } else {
+    return [];
+  }
+}
 
 module.exports = async (req, res) => {
   console.log("Flights API");
-  console.log(req);
+
   const source = req.query.source;
   const destination = req.query.destination;
 
-  console.log(source);
-  console.log(destination);
+  const metaData = await getFlightData();
+  console.log("META DATA");
+  console.log(metaData);
+  // console.log(source);
+  // console.log(destination);
   const planes = [];
 
-  Object.keys(flights).map((brand) => {
-    flights &&
-      flights[brand].routes.map((item) => {
-        if (item[0] == cities[source] && item[1] == cities[destination]) {
-          planes.push({
-            name: brand,
-            sPlane: flights[brand].sPlane,
-            specialPlane: flights[brand].sPlane ? "Yes" : "No",
-          });
-        }
-      });
-  });
+  metaData &&
+    metaData.map((brand) => {
+      // console.log(brand.routes);
+      const tp = brand.routes;
+
+      tp &&
+        tp.map((item, index) => {
+          if (
+            index % 2 == 0 &&
+            tp[index] == cities[source] &&
+            tp[index + 1] == cities[destination]
+          ) {
+            planes.push({
+              id: brand.id,
+              flight_name: brand.flight_name,
+              number_of_seats: brand.nos,
+              prices: brand.prices,
+              departure: brand.departure,
+            });
+          }
+        });
+    });
+
   res.send({
     flights: planes,
   });

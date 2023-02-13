@@ -10,6 +10,8 @@ const supabase = require("./supabase.js");
 
 const getCitiesFor = require("./services/getSouDes.js");
 const getFlightsFor = require("./services/getFlights.js");
+const bidFromUsers = require("./services/bidFromUser.js");
+const bidders = require("./services/getBidders");
 
 async function getFlightData() {
   try {
@@ -34,6 +36,8 @@ app.get("/jagannath", async (req, res) => {
 
 app.get("/getCities", getCitiesFor);
 app.get("/getFlights", getFlightsFor);
+app.get("/bidFromUser", bidFromUsers);
+app.get("/getBidders", bidders);
 
 // app.get("/flights", async (req, res) => {
 //   const flights = await getFlightData();
